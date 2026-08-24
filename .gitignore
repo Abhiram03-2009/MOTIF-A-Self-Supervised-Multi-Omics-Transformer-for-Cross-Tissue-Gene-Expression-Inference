@@ -1,0 +1,21 @@
+# raw and intermediate data (regenerate via data/download_data.py + preprocessing scripts)
+data/raw/
+data/raw.zip
+data/processed/
+
+# trained model weights (regenerate via main.py --mode pretrain/finetune/diffusion)
+outputs/checkpoints/
+
+# literature PDFs and internal planning docs
+docs/
+
+# local tooling
+.claude/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
