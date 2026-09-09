@@ -7,7 +7,8 @@ data/processed/
 outputs/checkpoints/
 
 # literature PDFs and internal planning docs
-docs/
+docs/papers/
+docs/planning/
 
 # local tooling
 .claude/
