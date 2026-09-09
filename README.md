@@ -65,6 +65,10 @@ benchmark that favors the linear baseline — are in
 [`outputs/results/manuscript_draft.md`](outputs/results/manuscript_draft.md),
 regenerated automatically each time `python main.py --mode evaluate` runs.
 
+For a non-technical walkthrough of what this project does and why, see
+[`docs/MOTIF_Overview.pptx`](docs/MOTIF_Overview.pptx) — a short slide deck
+covering the problem, the pipeline, and the headline results.
+
 ## Data sources
 
 GTEx v8 (RNA-seq) and ENCODE (ATAC-seq, WGBS methylation), liver/brain/lung.
