@@ -134,8 +134,13 @@ class MultiOmicsTransformer(nn.Module):
         num_layers: int = 3,
         ff_dim:     int = 512,
         dropout:    float = 0.1,
+        readout:    str = "token",
     ):
         super().__init__()
+        assert readout in ("token", "pooled")
+        assert readout == "pooled" or atac_dim == output_dim, \
+            "token readout needs one token per output gene"
+        self.readout   = readout
         self.atac_dim  = atac_dim
         self.meth_dim  = meth_dim
         self.hidden_dim = hidden_dim
@@ -164,11 +169,19 @@ class MultiOmicsTransformer(nn.Module):
             nn.Linear(hidden_dim, 1),  # reconstruct each peak value
         )
 
+        # "pooled": mean-pool all tokens, then map to every gene at once.
+        # "token": each gene's own token predicts that gene's expression.
         self.finetune_head = nn.Sequential(
             nn.Linear(hidden_dim, hidden_dim * 2),
             nn.GELU(),
             nn.Dropout(dropout),
             nn.Linear(hidden_dim * 2, output_dim),
+        )
+        self.token_head = nn.Sequential(
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_dim, 1),
         )
 
         self._init_weights()
@@ -215,8 +228,10 @@ class MultiOmicsTransformer(nn.Module):
             recon = self.pretrain_head(tokens).squeeze(-1)
             return {"pred": recon, "embedding": global_embed}
         else:
-            # Gene expression prediction from global embedding: (B, n_genes)
-            expr_pred = self.finetune_head(global_embed)
+            if self.readout == "token":
+                expr_pred = self.token_head(tokens).squeeze(-1)      # (B, n_genes)
+            else:
+                expr_pred = self.finetune_head(global_embed)          # (B, n_genes)
             return {"pred": expr_pred, "embedding": global_embed}
 
     def get_attention_weights(self, x: torch.Tensor) -> list:
