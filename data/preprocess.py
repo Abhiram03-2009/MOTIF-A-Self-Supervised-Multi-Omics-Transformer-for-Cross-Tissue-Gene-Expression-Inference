@@ -159,7 +159,10 @@ def build_atac_proxy(rna_matrix: np.ndarray, n_peaks: int,
     n_samples = rna_matrix.shape[0]
 
     n_gene_linked = min(n_peaks, rna_matrix.shape[1])
-    gene_idx = rng.choice(rna_matrix.shape[1], size=n_gene_linked, replace=False)
+    # Peak i maps to gene i in every tissue, not a random gene per tissue, so a
+    # peak stays near the same gene across tissues like a real one would.
+    rng.choice(rna_matrix.shape[1], size=n_gene_linked, replace=False)  # advances rng to match prior noise draws
+    gene_idx = np.arange(n_gene_linked)
     gene_signal = rna_matrix[:, gene_idx]
 
     tissue_bias = rng.randn(n_peaks) * 0.3
@@ -191,7 +194,9 @@ def build_methylation_proxy(rna_matrix: np.ndarray, n_sites: int,
     n_samples = rna_matrix.shape[0]
 
     n_gene_linked = min(n_sites, rna_matrix.shape[1])
-    gene_idx = rng.choice(rna_matrix.shape[1], size=n_gene_linked, replace=False)
+    # Site i maps to gene i, matching the ATAC peak at the same position (see build_atac_proxy).
+    rng.choice(rna_matrix.shape[1], size=n_gene_linked, replace=False)  # advances rng to match prior noise draws
+    gene_idx = np.arange(n_gene_linked)
     gene_signal = rna_matrix[:, gene_idx]
 
     meth_signal = -gene_signal + rng.randn(n_samples, n_gene_linked) * 0.4
