@@ -1,7 +1,7 @@
 """
 webapp/inference.py
 
-Backend service layer for the Multi-Omics clinical platform.
+Backend service layer for the MOTIF research platform.
 """
 
 import json
@@ -119,12 +119,14 @@ class MultiOmicsPlatform:
             if self._mlp is None:
                 self._mlp = MLPBaseline(cfg.model.INPUT_DIM, cfg.model.RNA_DIM).to(self.device)
                 self._mlp.load_state_dict(torch.load(ckpt_path, map_location=self.device, weights_only=False)["model"])
+                self._mlp.eval()
             with torch.no_grad():
                 return self._mlp(torch.FloatTensor(x).to(self.device)).cpu().numpy()
         else:
             if self._linear is None:
                 self._linear = LinearBaseline(cfg.model.INPUT_DIM, cfg.model.RNA_DIM).to(self.device)
                 self._linear.load_state_dict(torch.load(ckpt_path, map_location=self.device, weights_only=False)["model"])
+                self._linear.eval()
             with torch.no_grad():
                 return self._linear(torch.FloatTensor(x).to(self.device)).cpu().numpy()
 

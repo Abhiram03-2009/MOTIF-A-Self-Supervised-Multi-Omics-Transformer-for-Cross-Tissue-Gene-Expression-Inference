@@ -526,8 +526,8 @@ requires further support before stronger claims can be made.
   (housekeeping gene promoters showing consistently low methylation across all three tissues),
   providing evidence the pipeline reflects real biology rather than pipeline artifacts.
 - Ships as a complete, reproducible system: a documented data pipeline with verified public
-  accessions, a Reproducibility Statement with exact hyperparameters, and a clinical-style web
-  platform for interactive prediction and synthetic profile generation, not just offline scripts.
+  accessions, a Reproducibility Statement with exact hyperparameters, and an interactive web
+  platform for prediction and synthetic profile generation, not just offline scripts.
 
 ## 1. Introduction
 

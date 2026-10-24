@@ -1,5 +1,5 @@
 """
-MOTIF Clinical Platform — Streamlit web app for clinicians and biologists.
+MOTIF Research Platform: Streamlit web app for exploring the model.
 
 Launch:
     streamlit run src/webapp/app.py
@@ -169,13 +169,13 @@ def page_dashboard(platform):
             '<div class="motif-card"><div class="motif-eyebrow">Overview</div>'
             '<div style="font-size:0.95rem; line-height:1.6; color:#33404A;">'
             'MOTIF predicts gene expression directly from chromatin accessibility (ATAC-seq) '
-            'and DNA methylation, generalizes across tissue types, and generates realistic '
-            'synthetic multi-omics profiles via a conditional diffusion model.</div></div>',
+            'and DNA methylation, and carries much of what it learns across tissues. A diffusion '
+            'model for synthetic profiles is included as a prototype.</div></div>',
             unsafe_allow_html=True,
         )
         steps = [
             ("01", "Predict", "Infer expression from epigenomic input using the trained transformer."),
-            ("02", "Generate", "Sample synthetic tissue-conditioned profiles with the diffusion model."),
+            ("02", "Generate", "Sample synthetic profiles from the diffusion model (prototype)."),
             ("03", "Explore", "Visualize tissue structure and cross-tissue transfer performance."),
         ]
         for num, title, desc in steps:
@@ -216,7 +216,7 @@ def page_dashboard(platform):
 
 
 def page_expression_predictor(platform):
-    page_header("Clinical Tool", "Gene Expression Predictor",
+    page_header("Research Tool", "Gene Expression Predictor",
                 "Infer RNA expression from chromatin accessibility and methylation input.")
     status = platform.model_status()
 
@@ -264,8 +264,10 @@ def page_expression_predictor(platform):
 
 
 def page_synthetic_generator(platform):
-    page_header("Clinical Tool", "Synthetic Profile Generator",
-                "Sample tissue-conditioned multi-omics profiles from the diffusion model.")
+    page_header("Research Tool", "Synthetic Profile Generator",
+                "Sample multi-omics profiles from the diffusion model.")
+    st.warning("Research prototype: in the current model the output barely changes with the selected tissue, "
+               "so these profiles should not be treated as tissue-specific.")
     if not platform.model_status()["diffusion"]:
         st.error("No trained diffusion checkpoint found. Train it first with `python main.py --mode diffusion`.")
         return
@@ -399,7 +401,7 @@ def main():
     st.markdown(
         '<div class="motif-topbar">'
         '<span class="motif-topbar-name">MOTIF</span>'
-        '<span class="motif-topbar-sub">Clinical Platform</span></div>',
+        '<span class="motif-topbar-sub">Research Platform</span></div>',
         unsafe_allow_html=True,
     )
 

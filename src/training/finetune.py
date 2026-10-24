@@ -73,7 +73,8 @@ def train_one_model(model: nn.Module, model_name: str,
         lr           = lr,
         weight_decay = cfg.finetune.WEIGHT_DECAY,
     )
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+    scheduler = (torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+                 if cfg.finetune.USE_COSINE_SCHEDULE else None)
     criterion = nn.MSELoss()
     logger    = Logger(model_name)
 
@@ -102,11 +103,13 @@ def train_one_model(model: nn.Module, model_name: str,
 
             loss = criterion(pred, rna)
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), cfg.finetune.GRAD_CLIP)
+            if cfg.finetune.GRAD_CLIP:
+                torch.nn.utils.clip_grad_norm_(model.parameters(), cfg.finetune.GRAD_CLIP)
             optimizer.step()
             train_losses.append(loss.item())
 
-        scheduler.step()
+        if scheduler is not None:
+            scheduler.step()
 
         model.eval()
         val_losses, all_pred, all_true = [], [], []
@@ -187,22 +190,28 @@ def finetune():
 
     EPOCHS = cfg.finetune.EPOCHS
     LR     = cfg.finetune.LEARNING_RATE
+    SEED   = cfg.data.RANDOM_SEED
 
     results = {}
 
     print("\n--- Training: Linear Baseline ---")
+    torch.manual_seed(SEED)
     linear = LinearBaseline(INPUT_DIM, cfg.model.RNA_DIM).to(device)
     results["linear"] = train_one_model(
-        linear, "linear_baseline", train_loader, val_loader, EPOCHS, LR * 10
+        linear, "linear_baseline", train_loader, val_loader,
+        cfg.finetune.BASELINE_EPOCHS, cfg.finetune.LINEAR_LR
     )
 
     print("\n--- Training: MLP Baseline ---")
+    torch.manual_seed(SEED)
     mlp = MLPBaseline(INPUT_DIM, cfg.model.RNA_DIM).to(device)
     results["mlp"] = train_one_model(
-        mlp, "mlp_baseline", train_loader, val_loader, EPOCHS, LR
+        mlp, "mlp_baseline", train_loader, val_loader,
+        cfg.finetune.BASELINE_EPOCHS, cfg.finetune.MLP_LR
     )
 
     print("\n--- Training: Transformer (from scratch) ---")
+    torch.manual_seed(SEED)
     transformer_scratch = build_transformer(pretrained_path=None)
     results["transformer_scratch"] = train_one_model(
         transformer_scratch, "transformer_scratch",
@@ -210,6 +219,7 @@ def finetune():
     )
 
     print("\n--- Training: Transformer (pretrained) ---")
+    torch.manual_seed(SEED)
     transformer_pretrained = build_transformer("outputs/checkpoints/pretrained_best.pt")
     results["transformer_pretrained"] = train_one_model(
         transformer_pretrained, "transformer_pretrained",

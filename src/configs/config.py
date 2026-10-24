@@ -37,7 +37,7 @@ class ModelConfig:
 
 
 class PretrainConfig:
-    EPOCHS         = 25   # bumped from 15 - give the larger model more room before plateauing
+    EPOCHS         = 10   # validation loss plateaus by epoch ~10 on the corrected data
     # Attention is O(seq_len^2); long ATAC token sequences need smaller batches on CPU.
     BATCH_SIZE     = 8
     LEARNING_RATE  = 1e-4
@@ -45,17 +45,22 @@ class PretrainConfig:
     WARMUP_STEPS   = 500   # linear LR warmup (optimizer steps), then cosine decay
     GRAD_CLIP      = 1.0
     LOG_EVERY      = 10     # log every N batches
-    EARLY_STOP_PATIENCE = 8  # bumped from 5 - avoid stopping right as the bigger model gets going
+    EARLY_STOP_PATIENCE = 4
 
 
 class FinetuneConfig:
-    EPOCHS         = 22   # bumped from 18
+    # Values used for the reported results (manuscript Table VII).
+    EPOCHS         = 10   # transformer models
     BATCH_SIZE     = 8
-    LEARNING_RATE  = 5e-5   # lower LR for fine-tuning
+    LEARNING_RATE  = 5e-4   # transformer models
     WEIGHT_DECAY   = 1e-5
-    GRAD_CLIP      = 1.0
+    GRAD_CLIP      = None   # no gradient clipping during fine-tuning
+    USE_COSINE_SCHEDULE = False
+    BASELINE_EPOCHS = 40
+    LINEAR_LR      = 5e-4
+    MLP_LR         = 1e-3
     FREEZE_ENCODER = False  # set True to freeze pretrained encoder
-    EARLY_STOP_PATIENCE = 8  # bumped from 5
+    EARLY_STOP_PATIENCE = 8
 
 
 class DiffusionConfig:
