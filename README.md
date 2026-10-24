@@ -21,11 +21,26 @@ liver-to-brain/liver-to-lung transfer benchmark.
 - `data` — download and preprocessing scripts for GTEx/ENCODE
 - `notebooks/MOTIF_Pipeline.ipynb` — the pipeline end to end in one notebook
 
-Raw/processed data and trained checkpoints aren't tracked in this repo (the
-raw download alone is several gigabytes) — running the pipeline below
-regenerates all of it locally.
+## Quick start (no training needed)
 
-## Setup
+The trained checkpoints (`outputs/checkpoints/*_best.pt`) and the processed
+dataset (`data/processed/`, about 6 MB) are included, so the web platform runs
+right after installing the requirements:
+
+```bash
+pip install -r requirements.txt
+python main.py --mode platform
+```
+
+The included checkpoints come from a full CPU re-run of `python main.py --mode all`
+(PyTorch 2.14, October 2026). They reproduce the reported results: fine-tuning
+Pearson/R² are within 0.01 of the values in `outputs/results/`, and the
+classification and cross-tissue transfer metrics are identical.
+
+The raw GTEx/ENCODE download (several gigabytes) is not tracked; the steps
+below regenerate everything from scratch if you want to retrain.
+
+## Setup (to retrain from raw data)
 
 ```bash
 pip install -r requirements.txt

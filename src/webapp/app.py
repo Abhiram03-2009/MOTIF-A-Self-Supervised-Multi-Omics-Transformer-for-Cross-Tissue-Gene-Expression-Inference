@@ -6,6 +6,7 @@ Launch:
     python main.py --mode platform
 """
 
+import os
 import sys
 from pathlib import Path
 
@@ -18,6 +19,7 @@ from scipy import stats
 
 ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(ROOT))
+os.chdir(ROOT)  # data and checkpoint paths are relative to the repo root, so work from any launch folder
 
 from src.configs.config import Config
 from src.webapp.inference import get_platform
@@ -27,7 +29,7 @@ TISSUE_COLORS = {"liver": "#2E86AB", "brain": "#A23B72", "lung": "#F18F01"}
 
 # Fill in once the repo is public. Kept as one constant so it's a single
 # edit to point the platform at the real research writeup.
-GITHUB_REPO_URL = "https://github.com/your-org/motif"
+GITHUB_REPO_URL = "https://github.com/Abhiram03-2009/MOTIF-A-Self-Supervised-Multi-Omics-Transformer-for-Cross-Tissue-Gene-Expression-Inference"
 
 st.set_page_config(page_title="MOTIF", layout="wide")
 
