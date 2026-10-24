@@ -8,7 +8,7 @@ Replaces WGAN-GP with a diffusion model that:
   - Conditions on tissue type (liver, brain, lung)
   - Generates realistic ATAC + methylation profiles via reverse diffusion
 
-Why diffusion over GAN for clinical/biology use:
+Why diffusion over GAN for biological data:
   - More stable training, less mode collapse
   - Better coverage of the data distribution
   - Interpretable generation process (gradual denoising)

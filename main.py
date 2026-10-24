@@ -11,7 +11,7 @@ Usage:
     python main.py --mode finetune     # fine-tune + baseline comparison
     python main.py --mode diffusion    # train conditional diffusion model
     python main.py --mode evaluate     # run full evaluation + figures
-    python main.py --mode platform     # launch clinical web platform
+    python main.py --mode platform     # launch the research web platform
 """
 
 import argparse
@@ -78,7 +78,7 @@ def run_evaluate():
 
 def run_platform():
     print("\n" + "=" * 60)
-    print(" Launching MOTIF Clinical Platform")
+    print(" Launching MOTIF Research Platform")
     print("=" * 60)
     app_path = Path(__file__).parent / "src" / "webapp" / "app.py"
     subprocess.run([sys.executable, "-m", "streamlit", "run", str(app_path)])
