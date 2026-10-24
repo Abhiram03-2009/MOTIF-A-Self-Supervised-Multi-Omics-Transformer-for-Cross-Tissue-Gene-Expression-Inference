@@ -1,10 +1,10 @@
 # raw and intermediate data (regenerate via data/download_data.py + preprocessing scripts)
 data/raw/
 data/raw.zip
-data/processed/
 
-# trained model weights (regenerate via main.py --mode pretrain/finetune/diffusion)
-outputs/checkpoints/
+# trained model weights: the *_best.pt checkpoints are tracked so the platform runs without training;
+# the *_final.pt duplicates are not
+outputs/checkpoints/*_final.pt
 
 # literature PDFs and internal planning docs
 docs/papers/
@@ -20,3 +20,7 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# local run logs
+download_log.txt
+pipeline_log.txt
