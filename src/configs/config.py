@@ -64,7 +64,7 @@ class FinetuneConfig:
 
 
 class DiffusionConfig:
-    EPOCHS         = 25   # bumped from 10 - val loss was still decreasing every epoch, no plateau yet
+    EPOCHS         = 12   # upper limit used for the reported model; validation loss plateaus by about epoch 5
     BATCH_SIZE     = 8
     LEARNING_RATE  = 1e-4
     WEIGHT_DECAY   = 1e-5
