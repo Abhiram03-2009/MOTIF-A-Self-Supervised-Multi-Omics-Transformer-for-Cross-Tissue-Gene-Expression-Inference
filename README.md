@@ -77,7 +77,7 @@ transfer results, and a research summary.
 Current results, methodology, and an honest accounting of this pilot's
 limitations — including a real construction issue in the same-tissue
 benchmark that favors the linear baseline — are in
-`outputs/results/manuscript_draft.md`,
+`outputs/results/`,
 generated each time `python main.py --mode evaluate` runs.
 
 ## Data sources
